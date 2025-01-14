@@ -17,7 +17,7 @@ public class ArduinoController {
 
     @GetMapping("/api/temperature")
     public TemperatureResponse getTemperature() {
-        return new TemperatureResponse(arduinoService.getTemperature());
+        return new TemperatureResponse(arduinoService.getLastTemperature());
     }
 
     public static class TemperatureResponse {

@@ -2,12 +2,16 @@ package com.example.sensor_dashboard.service;
 
 import com.fazecast.jSerialComm.SerialPort;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.IOException;
 
 @Service
+@Getter
+@Setter
 public class ArduinoService {
 
     private static final String ARDUINO_PORT = "COM9";
@@ -38,7 +42,7 @@ public class ArduinoService {
             int numBytes;
             try {
                 while (true) {
-                    // データがある場合のみ読み取る
+                    // Read data only there are data
                     numBytes = inputStream.read(readBuffer);
                     if (numBytes > 0) {
                         String data = new String(readBuffer, 0, numBytes);
@@ -48,7 +52,7 @@ public class ArduinoService {
                             setLastTemperature(temperature);
                         }
                     } else {
-                        // データがない場合の処理（ログ出力）
+                        // Process if there were no data (log)
                         System.out.println("No data received. Waiting for next read...");
                     }
                 }
@@ -56,13 +60,5 @@ public class ArduinoService {
                 System.err.println("Error reading Arduino data: " + e.getMessage());
             }
         }).start();
-    }
-
-    public String getTemperature() {
-        return lastTemperature;
-    }
-
-    private void setLastTemperature(String temperature) {
-        this.lastTemperature = temperature;
     }
 }
