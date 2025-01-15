@@ -25,7 +25,7 @@ public class ArduinoService {
         serialPort.setBaudRate(9600);
 
         // Set the timeout for reading from the serial port
-        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);  // 10 seconds timeout
+        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);  // 1 seconds timeout
 
         if (serialPort.openPort()) {
             System.out.println("Port opened successfully.");
