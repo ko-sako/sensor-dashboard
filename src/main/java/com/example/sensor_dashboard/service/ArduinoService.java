@@ -25,7 +25,7 @@ public class ArduinoService {
         serialPort.setBaudRate(9600);
 
         // Set the timeout for reading from the serial port
-        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);  // 10 seconds timeout
+        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);  // 1 seconds timeout
 
         if (serialPort.openPort()) {
             System.out.println("Port opened successfully.");
@@ -48,7 +48,8 @@ public class ArduinoService {
                         String data = new String(readBuffer, 0, numBytes);
                         if (data.contains("Temperature:")) {
                             System.out.println("Received from Arduino: " + data);
-                            String temperature = data.split(":")[1].split(" ")[0];
+                            String temperature = data.split(": ")[1].split(" ")[0];
+                            System.out.println("Received from Arduino_2:" + temperature);
                             setLastTemperature(temperature);
                         }
                     } else {
