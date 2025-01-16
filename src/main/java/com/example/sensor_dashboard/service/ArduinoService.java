@@ -2,16 +2,12 @@ package com.example.sensor_dashboard.service;
 
 import com.fazecast.jSerialComm.SerialPort;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.IOException;
 
 @Service
-@Getter
-@Setter
 public class ArduinoService {
 
     private static final String ARDUINO_PORT = "COM9";
@@ -35,6 +31,14 @@ public class ArduinoService {
         }
     }
 
+    public String getLastTemperature() {
+        return lastTemperature;
+    }
+
+    public void setLastTemperature(String lastTemperature) {
+        this.lastTemperature = lastTemperature;
+    }
+
     private void startReadingData() {
         new Thread(() -> {
             InputStream inputStream = serialPort.getInputStream();
@@ -49,7 +53,7 @@ public class ArduinoService {
                         if (data.contains("Temperature:")) {
                             System.out.println("Received from Arduino: " + data);
                             String temperature = data.split(": ")[1].split(" ")[0];
-                            System.out.println("Received from Arduino_2:" + temperature);
+                            // System.out.println("Received from Arduino_2:" + temperature);
                             setLastTemperature(temperature);
                         }
                     } else {
