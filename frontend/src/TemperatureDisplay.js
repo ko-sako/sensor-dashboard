@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Speedometer from 'react-d3-speedometer';
 
 const TemperatureDisplay = () => {
     const [temperature, setTemperature] = useState(null);
@@ -22,6 +23,14 @@ const TemperatureDisplay = () => {
     return (
         <div>
             <h1> Temperature: {temperature ? `${temperature} C` : "Loading..."}</h1>
+            <Speedometer
+                maxValue={100}
+                value= {temperature}
+                needleColor="red"
+                ringWidth={15}
+                width={300}
+                height={200}
+            />
         </div>
     );
 };
