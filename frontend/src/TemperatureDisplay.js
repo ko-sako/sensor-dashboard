@@ -22,7 +22,6 @@ const TemperatureDisplay = () => {
 
     return (
         <div>
-            <h1> Temperature: {temperature ? `${temperature} C` : "Loading..."}</h1>
             <Speedometer
                 maxValue={100}
                 value= {temperature}

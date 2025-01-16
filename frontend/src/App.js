@@ -7,7 +7,15 @@ function App() {
     <div className="App">
         <h1>Arduino Temperature Monitor</h1>
         <TemperatureDisplay />
+
+        <h1>Arduino Temperature Monitor</h1>
+        <TemperatureDisplay />
+
+        <h1>Arduino Temperature Monitor</h1>
+        <TemperatureDisplay />
     </div>
+
+
   );
 }
 
