@@ -26,10 +26,13 @@ const TemperatureDisplay = () => {
             <Speedometer
                 maxValue={100}
                 value= {temperature}
+                currentValueText={'${value} C'}
                 needleColor="red"
                 ringWidth={15}
                 width={300}
                 height={200}
+                valueTextFontSize={32}
+                paddingVertical={17}
             />
         </div>
     );
