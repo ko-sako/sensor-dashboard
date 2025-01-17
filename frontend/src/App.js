@@ -9,13 +9,9 @@ function App() {
         <h1>Arduino Temperature Monitor</h1>
         <TemperatureDisplay />
 
-
-
-        <h1>Arduino Temperature Monitor</h1>
-        <TemperatureDisplay />
+        <h1>Arduino Voltage Monitor</h1>
+        <VoltageDisplay />
     </div>
-
-
   );
 }
 

@@ -8,7 +8,7 @@ const VoltageDisplay = () => {
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
-                const response = await axios.get("http://localhost:8081/api/data");
+                const response = await axios.get("http://localhost:8081/api/data/");
                 setTemperature(response.data.voltage);
             } catch (e) {
                 console.error("Error fetching voltage data:", e);
@@ -22,10 +22,11 @@ const VoltageDisplay = () => {
 
     return (
         <div>
+            {voltage && !isNaN(voltage) && (
             <Speedometer
-                maxValue={100}
+                maxValue={5.0}
                 value= {voltage}
-                currentValueText={'${value} C'}
+                currentValueText={'${value} V'}
                 needleColor="red"
                 ringWidth={15}
                 width={300}
@@ -33,6 +34,7 @@ const VoltageDisplay = () => {
                 valueTextFontSize={32}
                 paddingVertical={17}
             />
+            )}
         </div>
     );
 };
