@@ -10,7 +10,7 @@ import java.io.IOException;
 @Service
 public class ArduinoService {
 
-    private static final String ARDUINO_PORT = "COM9";
+    private static final String ARDUINO_PORT = "COM10";
     private SerialPort serialPort;
     private String lastTemperature = "";
 
@@ -21,7 +21,7 @@ public class ArduinoService {
         serialPort.setBaudRate(9600);
 
         // Set the timeout for reading from the serial port
-        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);  // 1 seconds timeout
+        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1200, 0);  // 1 seconds timeout
 
         if (serialPort.openPort()) {
             System.out.println("Port opened successfully.");
@@ -50,10 +50,11 @@ public class ArduinoService {
                     numBytes = inputStream.read(readBuffer);
                     if (numBytes > 0) {
                         String data = new String(readBuffer, 0, numBytes);
-                        if (data.contains("Temperature:")) {
+                        if (data.contains("Temperature")) {
                             System.out.println("Received from Arduino: " + data);
-                            String temperature = data.split(": ")[1].split(" ")[0];
-                            // System.out.println("Received from Arduino_2:" + temperature);
+//                            String temperature = data.split(": ")[1].split(" ")[0];
+                            String temperature = data.split(" {2}")[0].split(" ")[1].split("(?<=\\d)(?=[A-Za-z])")[0];
+                            System.out.println("Received from Arduino_2:" + temperature);
                             setLastTemperature(temperature);
                         }
                     } else {
