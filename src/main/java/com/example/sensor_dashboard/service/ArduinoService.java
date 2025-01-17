@@ -6,13 +6,38 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ArduinoService {
 
-    private static final String ARDUINO_PORT = "COM9";
+    private static final String ARDUINO_PORT = "COM10";
     private SerialPort serialPort;
     private String lastTemperature = "";
+    private String lastVoltage = "";
+
+    public String getLastVoltage() {
+        return lastVoltage;
+    }
+
+    public void setLastVoltage(String lastVoltage) {
+        this.lastVoltage = lastVoltage;
+    }
+
+    public void setSerialPort(SerialPort serialPort) {
+        this.serialPort = serialPort;
+    }
+
+    public Map<String, String> getLastData() {
+        Map<String, String> data = new HashMap<>();
+        data.put("temperature", lastTemperature);
+        data.put("voltage", lastVoltage);
+        return data;
+    }
 
     @PostConstruct
     public void initialize() {
@@ -50,12 +75,30 @@ public class ArduinoService {
                     numBytes = inputStream.read(readBuffer);
                     if (numBytes > 0) {
                         String data = new String(readBuffer, 0, numBytes);
-                        if (data.contains("Temperature:")) {
-                            System.out.println("Received from Arduino: " + data);
-                            String temperature = data.split(": ")[1].split(" ")[0];
-                            // System.out.println("Received from Arduino_2:" + temperature);
-                            setLastTemperature(temperature);
+                        System.out.println("Received from Arduino: " + data);
+
+                        String[] data_parts = data.split("\\s+|=|(?<=\\d)(?=[A-Za-z])");
+
+                        // Remove Empty Part
+                        List<String> filteredParts = Arrays.stream(data_parts)
+                                .filter(data_part -> !data_part.isEmpty())
+                                .toList();
+
+                        for (String part : filteredParts) {
+                            System.out.println("part: " + part);
                         }
+
+                        // Get Temperature
+                        // String temperature = data.split(": ")[1].split(" ")[0];
+                        String temperature = filteredParts.get(1);
+                        setLastTemperature(temperature);
+                        System.out.println("Temperature: " + temperature);
+
+                        // Get Voltage
+                        String voltage = filteredParts.get(4);
+                        setLastVoltage(voltage);
+                        System.out.println("Voltage: " + voltage);
+
                     } else {
                         // Process if there were no data (log)
                         System.out.println("No data received. Waiting for next read...");
