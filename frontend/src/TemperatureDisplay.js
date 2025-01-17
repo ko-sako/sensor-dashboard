@@ -8,7 +8,7 @@ const TemperatureDisplay = () => {
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
-                const response = await axios.get("http://localhost:8081/api/temperature/");
+                const response = await axios.get("http://localhost:8081/api/temperature");
                 setTemperature(response.data.temperature);
             } catch (e) {
                 console.error("Error fetching temperature data:", e);
@@ -22,6 +22,7 @@ const TemperatureDisplay = () => {
 
     return (
         <div>
+            <h1> Temperature: {temperature ? `${temperature} C` : "Loading..."}</h1>
             {temperature && !isNaN(temperature) && (
             <Speedometer
                 maxValue={100}
