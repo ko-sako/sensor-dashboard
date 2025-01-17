@@ -29,15 +29,11 @@ public class ArduinoController {
 
     @GetMapping("/api/temperature/")
     public TemperatureResponse getTemperature() {
-        TemperatureResponse temp_r = new TemperatureResponse(arduinoService.getLastTemperature());
-        // System.out.println("aaa!!!" + temp_r);
         return new TemperatureResponse(arduinoService.getLastTemperature());
     }
 
     @GetMapping("/api/data/")
     public Map getAllData() {
-        //TemperatureResponse temp_r = new TemperatureResponse(arduinoService.getLastTemperature());
-        // System.out.println("aaa!!!" + temp_r);
         return arduinoService.getLastData();
     }
 
