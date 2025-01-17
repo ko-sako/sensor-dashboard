@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Speedometer from 'react-d3-speedometer';
 
-const TemperatureDisplay = () => {
-    const [temperature, setTemperature] = useState(null);
+const VoltageDisplay = () => {
+    const [voltage, setTemperature] = useState(null);
 
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
-                const response = await axios.get("http://localhost:8081/api/temperature/");
-                setTemperature(response.data.temperature);
+                const response = await axios.get("http://localhost:8081/api/data/");
+                setTemperature(response.data.voltage);
             } catch (e) {
-                console.error("Error fetching temperature data:", e);
+                console.error("Error fetching voltage data:", e);
             }
         };
 
@@ -22,11 +22,11 @@ const TemperatureDisplay = () => {
 
     return (
         <div>
-            {temperature && !isNaN(temperature) && (
+            {voltage && !isNaN(voltage) && (
             <Speedometer
-                maxValue={100}
-                value= {temperature}
-                currentValueText={'${value} C'}
+                maxValue={5.0}
+                value= {voltage}
+                currentValueText={'${value} V'}
                 needleColor="red"
                 ringWidth={15}
                 width={300}
@@ -39,4 +39,4 @@ const TemperatureDisplay = () => {
     );
 };
 
-export default TemperatureDisplay;
+export default VoltageDisplay;
