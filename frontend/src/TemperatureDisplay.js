@@ -22,6 +22,8 @@ const TemperatureDisplay = () => {
 
     return (
         <div>
+            <h1> Temperature: {temperature ? `${temperature} C` : "Loading..."}</h1>
+            {temperature && !isNaN(temperature) && (
             <Speedometer
                 maxValue={100}
                 value= {temperature}
@@ -33,6 +35,7 @@ const TemperatureDisplay = () => {
                 valueTextFontSize={32}
                 paddingVertical={17}
             />
+            )}
         </div>
     );
 };
