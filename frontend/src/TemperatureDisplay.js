@@ -4,16 +4,29 @@ import Speedometer from 'react-d3-speedometer';
 
 const TemperatureDisplay = () => {
     const [temperature, setTemperature] = useState(null);
+    const [bgColour, setBgColour] = useState('white');
+    const [flashing, setFlashing] = useState(false);
 
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
                 const response = await axios.get("http://localhost:8081/api/temperature/");
                 setTemperature(response.data.temperature);
+
+
+                console.log(response.data.temperature);
+
+                if (response.data.temperature > 22) {
+                    console.log("temperature red");
+                    setBgColour('rgba(255, 0, 0, 0.5');
+                    setFlashing(true);
+                }
+
             } catch (e) {
                 console.error("Error fetching temperature data:", e);
             }
         };
+
 
         fetchTemperature();
         const interval = setInterval(fetchTemperature, 1000); // Poll every 1 sec
@@ -21,7 +34,7 @@ const TemperatureDisplay = () => {
     }, []);
 
     return (
-        <div>
+        <div style={{ backgroundColor: bgColour}}>
             {temperature && !isNaN(temperature) && (
             <Speedometer
                 maxValue={100}
