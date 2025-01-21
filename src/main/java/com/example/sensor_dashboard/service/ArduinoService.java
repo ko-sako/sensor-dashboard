@@ -15,10 +15,19 @@ import java.util.stream.Collectors;
 @Service
 public class ArduinoService {
 
-    private static final String ARDUINO_PORT = "COM10";
+    private static final String ARDUINO_PORT = "COM11";
     private SerialPort serialPort;
     private String lastTemperature = "";
     private String lastVoltage = "";
+    private String lastSecondTemperature = "";
+
+    public String getLastSecondTemperature() {
+        return lastSecondTemperature;
+    }
+
+    public void setLastSecondTemperature(String lastSecondTemperature) {
+        this.lastSecondTemperature = lastSecondTemperature;
+    }
 
     public String getLastVoltage() {
         return lastVoltage;
@@ -36,6 +45,7 @@ public class ArduinoService {
         Map<String, String> data = new HashMap<>();
         data.put("temperature", lastTemperature);
         data.put("voltage", lastVoltage);
+        data.put("temperature_2", lastSecondTemperature);
         return data;
     }
 
@@ -94,8 +104,13 @@ public class ArduinoService {
                         setLastTemperature(temperature);
                         System.out.println("Temperature: " + temperature);
 
+                        // Get Second Temperature
+                        String temperature_2 = filteredParts.get(4);
+                        setLastSecondTemperature(temperature_2);
+                        System.out.println("Second Temperature: " + temperature_2);
+
                         // Get Voltage
-                        String voltage = filteredParts.get(4);
+                        String voltage = filteredParts.get(7);
                         setLastVoltage(voltage);
                         System.out.println("Voltage: " + voltage);
 
