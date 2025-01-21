@@ -5,11 +5,25 @@ import Speedometer from 'react-d3-speedometer';
 const VoltageDisplay = () => {
     const [voltage, setTemperature] = useState(null);
 
+    const [bgColour, setBgColour] = useState('white');
+    const [flashing, setFlashing] = useState(false);
+
+    const [Threshold, setThreshold] = useState(4.1);
+
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
                 const response = await axios.get("http://localhost:8081/api/data/");
                 setTemperature(response.data.voltage);
+
+                if (response.data.voltage > Threshold) {
+                    setBgColour('rgba(255, 0, 0, 0.5');
+                    setFlashing(true);
+                } else if (response.data.voltage <= Threshold) {
+                   setBgColour('rgba(255, 255, 255, 1');
+                   setFlashing(false);
+                }
+
             } catch (e) {
                 console.error("Error fetching voltage data:", e);
             }
@@ -18,10 +32,10 @@ const VoltageDisplay = () => {
         fetchTemperature();
         const interval = setInterval(fetchTemperature, 1000); // Poll every 1 sec
         return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
+    }, [Threshold]);
 
     return (
-        <div>
+        <div style={{ backgroundColor: bgColour}}>
             {voltage && !isNaN(voltage) && (
             <Speedometer
                 maxValue={5.0}
@@ -35,6 +49,16 @@ const VoltageDisplay = () => {
                 paddingVertical={17}
             />
             )}
+            <div>
+                <label>
+                    Threshold:
+                    <input
+                        type="number"
+                        value={Threshold}
+                        onChange={(e) => setThreshold(Number(e.target.value))}
+                    />
+                </label>
+            </div>
         </div>
     );
 };
