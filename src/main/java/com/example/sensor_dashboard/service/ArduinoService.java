@@ -19,6 +19,15 @@ public class ArduinoService {
     private SerialPort serialPort;
     private String lastTemperature = "";
     private String lastVoltage = "";
+    private String lastSecondTemperature = "";
+
+    public String getLastSecondTemperature() {
+        return lastSecondTemperature;
+    }
+
+    public void setLastSecondTemperature(String lastSecondTemperature) {
+        this.lastSecondTemperature = lastSecondTemperature;
+    }
 
     public String getLastVoltage() {
         return lastVoltage;
@@ -36,6 +45,7 @@ public class ArduinoService {
         Map<String, String> data = new HashMap<>();
         data.put("temperature", lastTemperature);
         data.put("voltage", lastVoltage);
+        data.put("temperature_2", lastSecondTemperature);
         return data;
     }
 
