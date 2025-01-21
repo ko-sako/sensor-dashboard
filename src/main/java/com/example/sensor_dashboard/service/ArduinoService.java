@@ -106,7 +106,7 @@ public class ArduinoService {
 
                         // Get Second Temperature
                         String temperature_2 = filteredParts.get(4);
-                        setLastTemperature(temperature_2);
+                        setLastSecondTemperature(temperature_2);
                         System.out.println("Second Temperature: " + temperature_2);
 
                         // Get Voltage

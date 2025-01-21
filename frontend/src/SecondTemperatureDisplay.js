@@ -3,13 +3,13 @@ import axios from "axios";
 import Speedometer from 'react-d3-speedometer';
 
 const SecondTemperatureDisplay = () => {
-    const [temperature, setTemperature] = useState(null);
+    const [temperature_2, setTemperature] = useState(null);
 
     useEffect(() => {
         const fetchTemperature = async () => {
             try {
-                const response = await axios.get("http://localhost:8081/api/temperature/");
-                setTemperature(response.data.temperature);
+                const response = await axios.get("http://localhost:8081/api/data/");
+                setTemperature(response.data.temperature_2);
             } catch (e) {
                 console.error("Error fetching temperature data:", e);
             }
@@ -22,10 +22,10 @@ const SecondTemperatureDisplay = () => {
 
     return (
         <div>
-            {temperature && !isNaN(temperature) && (
+            {temperature_2 && !isNaN(temperature_2) && (
             <Speedometer
                 maxValue={100}
-                value= {temperature}
+                value= {temperature_2}
                 currentValueText={'${value} C'}
                 needleColor="red"
                 ringWidth={15}

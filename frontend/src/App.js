@@ -1,6 +1,7 @@
 import './App.css';
 import React from "react";
 import TemperatureDisplay from "./TemperatureDisplay";
+import SecondTemperatureDisplay from "./SecondTemperatureDisplay";
 import VoltageDisplay from "./VoltageDisplay";
 
 function App() {
