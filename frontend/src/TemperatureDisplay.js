@@ -16,10 +16,15 @@ const TemperatureDisplay = () => {
 
                 console.log(response.data.temperature);
 
-                if (response.data.temperature > 22) {
+                const TEMP = 22;
+                if (response.data.temperature > TEMP) {
                     console.log("temperature red");
                     setBgColour('rgba(255, 0, 0, 0.5');
                     setFlashing(true);
+                } else if (response.data.temperature <= TEMP) {
+                   console.log("temperature white");
+                   setBgColour('rgba(255, 255, 255, 1');
+                   setFlashing(false);
                 }
 
             } catch (e) {
