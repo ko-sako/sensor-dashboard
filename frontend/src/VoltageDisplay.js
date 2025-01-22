@@ -6,7 +6,7 @@ const VoltageDisplay = () => {
     const [voltage, setTemperature] = useState(null);
 
     const [bgColour, setBgColour] = useState('white');
-    const [flashing, setFlashing] = useState(false);
+    const [fontColour, setFontColour] = useState('');
 
     const [Threshold, setThreshold] = useState(4.1);
 
@@ -18,12 +18,11 @@ const VoltageDisplay = () => {
 
                 if (response.data.voltage > Threshold) {
                     setBgColour('rgba(255, 0, 0, 0.5');
-                    setFlashing(true);
+                    setFontColour('red');
                 } else if (response.data.voltage <= Threshold) {
                    setBgColour('rgba(255, 255, 255, 1');
-                   setFlashing(false);
+                    setFontColour('');
                 }
-
             } catch (e) {
                 console.error("Error fetching voltage data:", e);
             }
@@ -36,12 +35,14 @@ const VoltageDisplay = () => {
 
     return (
         <div style={{ backgroundColor: bgColour}}>
+            <h1 style={{ color: fontColour }}>Arduino Voltage Monitor</h1>
             {voltage && !isNaN(voltage) && (
             <Speedometer
                 maxValue={5.0}
                 value= {voltage}
                 currentValueText={'${value} V'}
-                needleColor="red"
+                needleColor='red'
+                textColor='black'
                 ringWidth={15}
                 width={300}
                 height={200}

@@ -6,7 +6,7 @@ const SecondTemperatureDisplay = () => {
     const [temperature_2, setTemperature] = useState(null);
 
     const [bgColour, setBgColour] = useState('white');
-    const [flashing, setFlashing] = useState(false);
+    const [fontColour, setFontColour] = useState('');
 
     const [Threshold, setThreshold] = useState(50);
 
@@ -18,10 +18,10 @@ const SecondTemperatureDisplay = () => {
 
                 if (response.data.temperature_2 > Threshold) {
                     setBgColour('rgba(255, 0, 0, 0.5');
-                    setFlashing(true);
+                    setFontColour('red');
                 } else if (response.data.temperature_2 <= Threshold) {
                    setBgColour('rgba(255, 255, 255, 1');
-                   setFlashing(false);
+                   setFontColour('');
                 }
 
             } catch (e) {
@@ -36,12 +36,14 @@ const SecondTemperatureDisplay = () => {
 
     return (
         <div style={{ backgroundColor: bgColour}}>
+            <h1 style={{ color: fontColour }}>Arduino Second Temperature Monitor</h1>
             {temperature_2 && !isNaN(temperature_2) && (
             <Speedometer
                 maxValue={100}
                 value= {temperature_2}
                 currentValueText={'${value} C'}
-                needleColor="red"
+                needleColor='red'
+                textColor='black'
                 ringWidth={15}
                 width={300}
                 height={200}
