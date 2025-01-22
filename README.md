@@ -3,7 +3,14 @@
 - Node.js (https://nodejs.org/en/download)
 
 
-## 1. Backend - Build and Run without IDE
+## Build and Run Backend - Option 1: With IDE
+This project use **Gradle**. Just build and run this project depends on your IDE. 
+
+![image](https://github.com/user-attachments/assets/8c42b6a1-c888-4f63-8a65-cfae5297e62e)
+
+ This page might be helpful: https://docs.gradle.org/current/userguide/gradle_ides.html
+
+## Build and Run Backend - Option 2: Without IDE
 ### Pre-setting: Check `java` and `gradlew.bat` command is available
 Please make sure you can run `java` and `gradlew.bat` command using a terminal or command prompt.
 
@@ -60,7 +67,7 @@ gradlew.bat -version
 
 
 
-## 2. Frontend - Build and Run without IDE
+## Build and Run Frontend
 ### Pre-setting: Install Node.js
 This project using React. React requires `Node.js` to run. If you have not installed it yet, you can get it from:
 https://nodejs.org/en/download
@@ -74,7 +81,7 @@ npm -version
 
 ---
 
-### Steps to Build and Run the React Frontend
+### Steps to Build and Run the React Frontend using terminal or command prompt
 1. Navigate to the `frontend` directory just under the project root.
     ```bash
     cd frontend
