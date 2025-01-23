@@ -2,6 +2,7 @@ package com.example.sensor_dashboard.controller;
 
 import com.example.sensor_dashboard.service.ArduinoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,21 @@ public class ArduinoController {
     public Map getAllData() {
         return arduinoService.getLastData();
     }
+
+    @GetMapping("/api/data-storage")
+    public ResponseEntity<String> dataStorage() {
+        if (!arduinoService.isStoringData()) {
+            // Start Data Storing
+            arduinoService.startSavingData();
+            arduinoService.toggleDataStorage();
+            return ResponseEntity.ok("Data storage started.");
+        } else {
+            arduinoService.saveBufferToCSV();
+            arduinoService.toggleDataStorage();
+            return ResponseEntity.ok("Data storage stopped and saved to CSV");
+        }
+    }
+
 
     public static class TemperatureResponse {
         private final String temperature;
