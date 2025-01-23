@@ -4,12 +4,15 @@ import com.fazecast.jSerialComm.SerialPort;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,9 +20,14 @@ public class ArduinoService {
 
     private static final String ARDUINO_PORT = "COM11";
     private SerialPort serialPort;
+    private LocalDateTime localDateTime;
+
     private String lastTemperature = "";
     private String lastVoltage = "";
     private String lastSecondTemperature = "";
+
+    private boolean storingData = false;
+    private List<Map<String, String>> dataBuffer = new CopyOnWriteArrayList<>();
 
     public String getLastSecondTemperature() {
         return lastSecondTemperature;
@@ -41,12 +49,39 @@ public class ArduinoService {
         this.serialPort = serialPort;
     }
 
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public void setDataBuffer(List<Map<String, String>> dataBuffer) {
+        this.dataBuffer = dataBuffer;
+    }
+
     public Map<String, String> getLastData() {
         Map<String, String> data = new HashMap<>();
+        data.put("date", String.valueOf(localDateTime));
         data.put("temperature", lastTemperature);
         data.put("voltage", lastVoltage);
         data.put("temperature_2", lastSecondTemperature);
         return data;
+    }
+
+    public boolean isStoringData() {
+        return storingData;
+    }
+
+    public void toggleDataStorage() {
+        if(storingData) {
+            System.out.println("Storing Data Status: " + storingData);
+        } else {
+            System.out.println("Storing Data Status: " + storingData);
+        }
+        storingData = !storingData;
+        System.out.println("[NEW] Storing Data Status: " + storingData);
     }
 
     @PostConstruct
@@ -84,6 +119,7 @@ public class ArduinoService {
                     // Read data only there are data
                     numBytes = inputStream.read(readBuffer);
                     if (numBytes > 0) {
+                        setLocalDateTime(LocalDateTime.now());
                         String data = new String(readBuffer, 0, numBytes);
                         System.out.println("Received from Arduino: " + data);
 
@@ -94,25 +130,25 @@ public class ArduinoService {
                                 .filter(data_part -> !data_part.isEmpty())
                                 .toList();
 
-                        for (String part : filteredParts) {
-                            System.out.println("part: " + part);
-                        }
+//                        for (String part : filteredParts) {
+//                            System.out.println("part: " + part);
+//                        }
 
                         // Get Temperature
                         // String temperature = data.split(": ")[1].split(" ")[0];
                         String temperature = filteredParts.get(1);
                         setLastTemperature(temperature);
-                        System.out.println("Temperature: " + temperature);
+                        // System.out.println("Temperature: " + temperature);
 
                         // Get Second Temperature
                         String temperature_2 = filteredParts.get(4);
                         setLastSecondTemperature(temperature_2);
-                        System.out.println("Second Temperature: " + temperature_2);
+                        // System.out.println("Second Temperature: " + temperature_2);
 
                         // Get Voltage
                         String voltage = filteredParts.get(7);
                         setLastVoltage(voltage);
-                        System.out.println("Voltage: " + voltage);
+                        //System.out.println("Voltage: " + voltage);
 
                     } else {
                         // Process if there were no data (log)
@@ -123,5 +159,32 @@ public class ArduinoService {
                 System.err.println("Error reading Arduino data: " + e.getMessage());
             }
         }).start();
+    }
+
+    public void startSavingData() {
+        new Thread(() -> {
+            while (storingData) {
+                dataBuffer.add(new HashMap<>(getLastData()));
+                System.out.println("Write Data::::" + getLastData());
+                try {
+                    Thread.sleep(1000); // 1 sec delay
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break; // Exit the loop if the thread is interrupted
+                }
+            }
+        }).start();
+    }
+
+    public void saveBufferToCSV() {
+        try(FileWriter csvWriter = new FileWriter("sensor_data.csv")) {
+            csvWriter.append("Date, TemperatureNo1, TemperatureNo2, Voltage\n");
+            for(Map<String, String>rowData:dataBuffer) {
+                csvWriter.append(String.join(",",rowData.values())).append("\n");
+            }
+            setDataBuffer(new CopyOnWriteArrayList<>());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
