@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +21,13 @@ public class ArduinoService {
 
     private static final String ARDUINO_PORT = "COM11";
     private SerialPort serialPort;
+    private LocalDateTime localDateTime;
+
     private String lastTemperature = "";
     private String lastVoltage = "";
     private String lastSecondTemperature = "";
+
+
 
     private boolean storingData = false;
     private List<Map<String, String>> dataBuffer = new CopyOnWriteArrayList<>();
@@ -47,8 +52,21 @@ public class ArduinoService {
         this.serialPort = serialPort;
     }
 
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public void setDataBuffer(List<Map<String, String>> dataBuffer) {
+        this.dataBuffer = dataBuffer;
+    }
+
     public Map<String, String> getLastData() {
         Map<String, String> data = new HashMap<>();
+        data.put("date", String.valueOf(localDateTime));
         data.put("temperature", lastTemperature);
         data.put("voltage", lastVoltage);
         data.put("temperature_2", lastSecondTemperature);
@@ -104,8 +122,9 @@ public class ArduinoService {
                     // Read data only there are data
                     numBytes = inputStream.read(readBuffer);
                     if (numBytes > 0) {
+                        setLocalDateTime(LocalDateTime.now());
                         String data = new String(readBuffer, 0, numBytes);
-//                        System.out.println("Received from Arduino: " + data);
+                        System.out.println("Received from Arduino: " + data);
 
                         String[] data_parts = data.split("\\s+|=|(?<=\\d)(?=[A-Za-z])");
 
@@ -161,10 +180,11 @@ public class ArduinoService {
 
     public void saveBufferToCSV() {
         try(FileWriter csvWriter = new FileWriter("sensor_data.csv")) {
-            csvWriter.append("Date, Time, TemperatureNo1, TemperatureNo2, Voltage\n");
+            csvWriter.append("Date, TemperatureNo1, TemperatureNo2, Voltage\n");
             for(Map<String, String>rowData:dataBuffer) {
                 csvWriter.append(String.join(",",rowData.values())).append("\n");
             }
+            setDataBuffer(new CopyOnWriteArrayList<>());
         } catch (IOException e) {
             e.printStackTrace();
         }
