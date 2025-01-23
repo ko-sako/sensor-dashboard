@@ -2,7 +2,6 @@ package com.example.sensor_dashboard.service;
 
 import com.fazecast.jSerialComm.SerialPort;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -26,8 +25,6 @@ public class ArduinoService {
     private String lastTemperature = "";
     private String lastVoltage = "";
     private String lastSecondTemperature = "";
-
-
 
     private boolean storingData = false;
     private List<Map<String, String>> dataBuffer = new CopyOnWriteArrayList<>();
@@ -166,13 +163,14 @@ public class ArduinoService {
 
     public void startSavingData() {
         new Thread(() -> {
-            while(storingData){
-                Map<String, String> data = getLastData();
-                dataBuffer.add(new HashMap<>(data));
-                try{
+            while (storingData) {
+                dataBuffer.add(new HashMap<>(getLastData()));
+                System.out.println("Write Data::::" + getLastData());
+                try {
                     Thread.sleep(1000); // 1 sec delay
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    break; // Exit the loop if the thread is interrupted
                 }
             }
         }).start();
