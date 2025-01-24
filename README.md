@@ -1,5 +1,5 @@
 ## Arduino Sensor Dashboard
-![image](https://github.com/user-attachments/assets/9dc37161-6aa4-44d8-a496-1fe6bfb14ebf)
+[![image](https://github.com/user-attachments/assets/9dc37161-6aa4-44d8-a496-1fe6bfb14ebf)](https://github.com/ko-sako/sensor-dashboard/blob/main/React%20App%20-%20Google%20Chrome%202025-01-24%2014-51-15.mp4)
 
 ## Required Environment
 - Java: Version need to be equal to or greater then **Java 17**
