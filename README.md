@@ -1,3 +1,6 @@
+## Arduino Sensor Dashboard
+![image](https://github.com/user-attachments/assets/9dc37161-6aa4-44d8-a496-1fe6bfb14ebf)
+
 ## Required Environment
 - Java: Version need to be equal to or greater then **Java 17**
 - Node.js (https://nodejs.org/en/download)
